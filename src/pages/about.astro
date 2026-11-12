@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+<Base title={`关于 ${site.name}`} active="about">
+  <header class="page-header"><div class="eyebrow">HELLO, NICE TO MEET YOU</div><h1>你好，我是<br />{site.name}<span class="accent">。</span></h1><p>{site.subtitle}</p></header>
+  <div class="about-body prose">{(site.about || '').split(/\n\s*\n/).map(paragraph => <p>{paragraph}</p>)}</div>
+  <div class="about-signature">Thanks for stopping by.<span>愿你今天也有一个好心情。</span></div>
+</Base>

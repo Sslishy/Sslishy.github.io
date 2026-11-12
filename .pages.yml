@@ -1,0 +1,101 @@
+media:
+  input: public/images
+  output: /images
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp, gif, avif, svg]
+  rename: safe
+content:
+  - name: diary
+    label: 我的日记
+    type: collection
+    path: src/content/diary
+    format: yaml-frontmatter
+    filename:
+      template: "{year}-{month}-{day}-{hour}{minute}{second}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, date, category, draft]
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: 日记标题
+        type: string
+        required: true
+      - name: date
+        label: 日期
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: category
+        label: 分类
+        type: select
+        default: 生活
+        options:
+          values: [生活, 随想, 学习, 旅行]
+      - name: description
+        label: 简短摘要
+        description: 首页显示的介绍，写一两句话就好。
+        type: text
+      - name: cover
+        label: 封面图片（可选）
+        type: image
+      - name: coverAlt
+        label: 图片描述
+        description: 描述图片内容，方便使用屏幕阅读器的访客理解。
+        type: string
+      - name: draft
+        label: 暂不在网站展示
+        description: 开启时网站不展示这篇文章；公开仓库中的原文仍然公开。
+        type: boolean
+        default: true
+      - name: sample
+        label: 示例文章
+        type: boolean
+        default: false
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          format: markdown
+  - name: profile
+    label: 个人资料
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - name: name
+        label: 昵称
+        type: string
+        required: true
+      - name: title
+        label: 网站标题
+        type: string
+        required: true
+      - name: subtitle
+        label: 首页的一句话
+        type: string
+      - name: bio
+        label: 侧栏自我介绍
+        type: text
+      - name: tagline
+        label: 个人资料下方的一句话
+        type: string
+      - name: introEnglish
+        label: 英文介绍（可选）
+        type: text
+      - name: avatar
+        label: 头像（可选）
+        type: image
+      - name: github
+        label: GitHub 主页链接
+        type: string
+      - name: email
+        label: 公开邮箱（可选）
+        type: string
+      - name: about
+        label: 关于我的正文
+        description: 用空行分段。
+        type: text

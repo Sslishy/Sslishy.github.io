@@ -1,0 +1,49 @@
+---
+import site from '../data/site.json';
+import '../styles/global.css';
+const { title = site.title, description = site.subtitle, active = 'diary' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title === site.title ? title : `${title} · ${site.name}`}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <div class="site-shell">
+      <nav class="side-nav" aria-label="主导航">
+        <a href="/" aria-current={active === 'diary' ? 'page' : undefined} aria-label="Home 首页">Home</a>
+        <a href="/archive/" aria-current={active === 'archive' ? 'page' : undefined} aria-label="Archive 归档">Archive</a>
+        <a href="/about/" aria-current={active === 'about' ? 'page' : undefined} aria-label="About 关于">About</a>
+        {site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
+        <a class="write-nav" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer" aria-label="Write 写日记">Write</a>
+      </nav>
+      <aside class="profile">
+        <a href="/" class="profile-art" aria-label={`${site.name} 的主页`}>
+          {site.avatar ? <img src={site.avatar} alt={`${site.name} 的头像`} width="288" height="288" /> : <span class="avatar-placeholder">{site.name.slice(0,1)}</span>}
+        </a>
+        <a href="/" class="profile-name">{site.name}</a>
+        <p class="name-alt">个人日记</p>
+        <p class="profile-tagline">{site.tagline}</p>
+        <p class="profile-intro">{site.introEnglish}</p>
+        <p class="profile-bio">{site.bio}</p>
+        <p class="profile-signature">— a few pages from my life</p>
+        {site.email && <a class="profile-email" href={`mailto:${site.email}`}>Email</a>}
+      </aside>
+      <div class="main-column">
+        <main id="main"><slot /></main>
+        <footer><span>© {new Date().getFullYear()} {site.name}</span><a href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">Write a new entry ↗</a></footer>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { publishedPosts, postUrl, dateLabel } from '../lib/posts';
+const posts = await publishedPosts();
+const years = [...new Set(posts.map(post => post.data.date.getUTCFullYear()))];
+---
+<Base title="日记归档" active="archive">
+  <header class="page-header"><div class="eyebrow">A LITTLE COLLECTION OF DAYS</div><h1>日子有迹<span class="accent">。</span></h1><p>把散落的片刻，按时间收好。共 {posts.length} 篇记录。</p></header>
+  {years.map(year => <section class="archive-year"><h2>{year}<span>{posts.filter(post => post.data.date.getUTCFullYear() === year).length} 篇</span></h2><ul>{posts.filter(post => post.data.date.getUTCFullYear() === year).map(post => <li><a href={postUrl(post)}><time datetime={post.data.date.toISOString()}>{dateLabel(post.data.date).replace(`${year}年`, '')}</time><span>{post.data.title}{post.data.sample && <small>示例</small>}</span><span class="archive-category">{post.data.category} ↗</span></a></li>)}</ul></section>)}
+  {!posts.length && <p class="empty-state">第一篇日记发布后，就会出现在这里。</p>}
+</Base>

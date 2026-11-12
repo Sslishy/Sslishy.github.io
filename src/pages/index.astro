@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import { publishedPosts, postUrl, dateLabel, readMinutes } from '../lib/posts';
+const posts = await publishedPosts();
+const categories = [...new Set(posts.map(p => p.data.category))];
+const englishDate = (date: Date) => new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'Asia/Shanghai' }).format(date);
+---
+<Base>
+  <h1 class="sr-only">{site.name} 的日记</h1>
+  <div class="entries">
+    {posts.map((post, index) => <article class:list={['entry', { 'entry-text-only': !post.data.cover }]} data-category={post.data.category}>
+      {post.data.cover && <a href={postUrl(post)} class="entry-image" tabindex="-1" aria-hidden="true"><img src={post.data.cover} alt="" loading={index === 0 ? 'eager' : 'lazy'} width="960" height="540" /></a>}
+      <div class="entry-copy">
+        <h2><a href={postUrl(post)}>{post.data.title}</a></h2>
+        <time datetime={post.data.date.toISOString()} title={dateLabel(post.data.date)}>{englishDate(post.data.date)}</time>
+        <p class="entry-description">{post.data.description}</p>
+        <p class="entry-details"><em>By {site.name}</em><br /><span>{post.data.category}</span>{post.data.sample && <span class="sample-badge"> · 示例文章</span>}<br /><span class="reading-time">{readMinutes(post.body)} min read</span></p>
+        <a class="read-link" href={postUrl(post)} aria-label={`阅读：${post.data.title}`}>Read</a>
+      </div>
+    </article>)}
+    {!posts.length && <p class="empty-state">第一篇日记，从这里开始。</p>}
+  </div>
+  <div class="entries-toolbar">
+    <div class="filters" role="group" aria-label="按日记分类筛选">
+      <button type="button" data-filter="全部" aria-pressed="true">All</button>
+      {categories.map(category => <button type="button" data-filter={category} aria-pressed="false">{category}</button>)}
+    </div>
+    <span class="filter-result" role="status">{posts.length} entries</span>
+    <a href="/archive/">Archive ↗</a>
+  </div>
+</Base>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const entries = document.querySelectorAll<HTMLElement>('[data-category]');
+  const status = document.querySelector('.filter-result');
+  buttons.forEach(button => button.addEventListener('click', () => {
+    buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    let count = 0;
+    entries.forEach(entry => { entry.hidden = button.dataset.filter !== '全部' && entry.dataset.category !== button.dataset.filter; if (!entry.hidden) count++; });
+    if (status) status.textContent = `${count} ${count === 1 ? 'entry' : 'entries'}`;
+  }));
+</script>
