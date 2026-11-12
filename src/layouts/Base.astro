@@ -26,7 +26,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <a href="/archive/" aria-current={active === 'archive' ? 'page' : undefined} aria-label="Archive 归档">Archive</a>
         <a href="/about/" aria-current={active === 'about' ? 'page' : undefined} aria-label="About 关于">About</a>
         {site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
-        <a class="write-nav" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer" aria-label="Write 写日记">Write</a>
       </nav>
       <aside class="profile">
         <a href="/" class="profile-art" aria-label={`${site.name} 的主页`}>
@@ -42,7 +41,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       </aside>
       <div class="main-column">
         <main id="main"><slot /></main>
-        <footer><span>© {new Date().getFullYear()} {site.name}</span><a href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">Write a new entry ↗</a></footer>
+        <footer><span>© {new Date().getFullYear()} {site.name}</span></footer>
       </div>
     </div>
   </body>
